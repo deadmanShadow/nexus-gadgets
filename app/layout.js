@@ -6,7 +6,7 @@ import "./globals.css";
 const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500"] });
 
 export const metadata = {
-  title: "Nexus Gadgets",
+  title: "Nexus Gadgets | Online Solutions for Tech Enthusiasts",
   description: "E-Commerce with Next.js ",
 };
 
