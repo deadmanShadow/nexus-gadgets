@@ -1,10 +1,11 @@
+import User from "@/models/user";
 import { Inngest } from "inngest";
-import User from "../models/user";
 import connectDB from "./db";
 
-export const inngest = new Inngest({ id: "nexus-gadgets" });
+export const inngest = new Inngest({ id: "nexusgadgets" });
 
-//inngest function to save user data to a database
+//save user
+
 export const syncUserCreation = inngest.createFunction(
   {
     id: "sync-user-from-clerk",
@@ -26,7 +27,8 @@ export const syncUserCreation = inngest.createFunction(
   }
 );
 
-//inngest funtion to update user data in database
+//update user
+
 export const syncUserUpdation = inngest.createFunction(
   {
     id: "update-user-from-clerk",
@@ -48,14 +50,10 @@ export const syncUserUpdation = inngest.createFunction(
   }
 );
 
-//inngest function to delete user data from database
+//delete user
 export const syncUserDeletion = inngest.createFunction(
-  {
-    id: "delete-user-with-clerk",
-  },
-  {
-    event: "clerk/user.deleted",
-  },
+  { id: "delete-user-with-clerk" },
+  { event: "clerk/user.deleted" },
   async ({ event }) => {
     const { id } = event.data;
     await connectDB();

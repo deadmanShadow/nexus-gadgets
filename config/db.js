@@ -3,11 +3,9 @@ const { default: mongoose } = require("mongoose");
 let cached = global.mongoose;
 
 if (!cached) {
-  cached = global.mongoose = {
-    conn: null,
-    promise: null,
-  };
+  cached = global.mongoose = { conn: null, promise: null };
 }
+
 async function connectDB() {
   if (cached.conn) {
     return cached.conn;
@@ -17,7 +15,7 @@ async function connectDB() {
       bufferCommands: false,
     };
     cached.promise = mongoose
-      .connect(`$${process.env.MONGODB_URI}/nexus-gadgets`, opts)
+      .connect(`${process.env.MONGO_URI}/nexusgadget`, opts)
       .then((mongoose) => {
         return mongoose;
       });
@@ -25,4 +23,5 @@ async function connectDB() {
   cached.conn = await cached.promise;
   return cached.conn;
 }
+
 export default connectDB;
