@@ -15,7 +15,7 @@ async function connectDB() {
       bufferCommands: false,
     };
     cached.promise = mongoose
-      .connect(`${process.env.MONGO_URI}`, opts)
+      .connect(`${process.env.MONGODB_URI}/nexus-gadgets`, opts)
       .then((mongoose) => {
         return mongoose;
       });
