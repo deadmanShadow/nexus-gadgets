@@ -1,5 +1,5 @@
-import User from "@/models/User";
 import { Inngest } from "inngest";
+import User from "../models/user";
 import connectDB from "./db";
 
 export const inngest = new Inngest({ id: "nexus-gadgets" });
