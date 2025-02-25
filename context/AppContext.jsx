@@ -1,6 +1,6 @@
 "use client";
 import { productsDummyData, userDummyData } from "@/assets/assets";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -14,10 +14,10 @@ export const AppContextProvider = (props) => {
   const currency = process.env.NEXT_PUBLIC_CURRENCY || "$";
   const router = useRouter();
   const { user } = useUser();
-
+  const { getToken } = useAuth();
   const [products, setProducts] = useState([]);
   const [userData, setUserData] = useState(false);
-  const [isSeller, setIsSeller] = useState(true);
+  const [isSeller, setIsSeller] = useState(false);
   const [cartItems, setCartItems] = useState({});
 
   const fetchProductData = async () => {
@@ -25,7 +25,12 @@ export const AppContextProvider = (props) => {
   };
 
   const fetchUserData = async () => {
-    setUserData(userDummyData);
+    try {
+      if (user.publicMetadata.role === "admin") {
+        setIsSeller(true);
+      }
+      setUserData(userDummyData);
+    } catch (error) {}
   };
 
   const addToCart = (itemId) => {
@@ -56,14 +61,16 @@ export const AppContextProvider = (props) => {
       return total + (item ? item.price * qty : 0);
     }, 0);
   };
-
   useEffect(() => {
     fetchProductData();
-    fetchUserData();
   }, []);
+  useEffect(() => {
+    fetchUserData();
+  }, [user]);
 
   const value = {
     user,
+    getToken,
     currency,
     router,
     isSeller,
