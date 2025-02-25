@@ -1,12 +1,14 @@
 "use client";
-import { assets } from "@/assets/assets";
+import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
+import { useClerk, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = () => {
-  const { isSeller, router } = useAppContext();
+  const { isSeller, router, user } = useAppContext();
+  const { openSignIn } = useClerk();
 
   return (
     <motion.nav
@@ -15,7 +17,6 @@ const Navbar = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      {/* Logo */}
       <motion.div
         className="cursor-pointer w-28 md:w-32"
         whileHover={{ scale: 1.05 }}
@@ -24,8 +25,6 @@ const Navbar = () => {
       >
         <Image src={assets.logo} alt="logo" />
       </motion.div>
-
-      {/* Navigation Links */}
       <div className="flex items-center gap-4 lg:gap-8 max-md:hidden">
         {["Home", "Shop", "About Us", "Contact"].map((text, index) => (
           <motion.div
@@ -53,7 +52,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Icons Section */}
       <ul className="hidden md:flex items-center gap-4">
         <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.2 }}>
           <Image
@@ -62,17 +60,60 @@ const Navbar = () => {
             alt="search icon"
           />
         </motion.div>
-        <motion.button
-          className="flex items-center gap-2 hover:text-gray-900 transition"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Image src={assets.user_icon} alt="user icon" />
-          Account
-        </motion.button>
+        {user ? (
+          <>
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Home"
+                  labelIcon={<HomeIcon />}
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Products"
+                  labelIcon={<BoxIcon />}
+                  onClick={() => {
+                    router.push("/all-products");
+                  }}
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Cart"
+                  labelIcon={<CartIcon />}
+                  onClick={() => {
+                    router.push("/cart");
+                  }}
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="My Orders"
+                  labelIcon={<BagIcon />}
+                  onClick={() => {
+                    router.push("/my-orders");
+                  }}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </>
+        ) : (
+          <motion.button
+            onClick={openSignIn}
+            className="flex items-center gap-2 hover:text-gray-900 transition"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Image src={assets.user_icon} alt="user icon" />
+            Account
+          </motion.button>
+        )}
       </ul>
-
-      {/* Mobile Menu */}
+      {}
       <div className="flex items-center md:hidden gap-3">
         {isSeller && (
           <motion.button
@@ -84,17 +125,42 @@ const Navbar = () => {
             Seller Dashboard
           </motion.button>
         )}
-        <motion.button
-          className="flex items-center gap-2 hover:text-gray-900 transition"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Image src={assets.user_icon} alt="user icon" />
-          Account
-        </motion.button>
+        {user ? (
+          <>
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Cart"
+                  labelIcon={<CartIcon />}
+                  onClick={() => {
+                    router.push("/cart");
+                  }}
+                />
+              </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="My Orders"
+                  labelIcon={<BagIcon />}
+                  onClick={() => {
+                    router.push("/my-orders");
+                  }}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </>
+        ) : (
+          <motion.button
+            onClick={openSignIn}
+            className="flex items-center gap-2 hover:text-gray-900 transition"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Image src={assets.user_icon} alt="user icon" />
+            Account
+          </motion.button>
+        )}
       </div>
     </motion.nav>
   );
 };
-
 export default Navbar;

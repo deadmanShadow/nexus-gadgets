@@ -1,4 +1,5 @@
 import { AppContextProvider } from "@/context/AppContext";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
@@ -12,11 +13,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${outfit.className} antialiased text-gray-700`}>
-        <Toaster />
-        <AppContextProvider>{children}</AppContextProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${outfit.className} antialiased text-gray-700`}>
+          <Toaster />
+          <AppContextProvider>{children}</AppContextProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
