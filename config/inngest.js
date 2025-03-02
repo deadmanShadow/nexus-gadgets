@@ -1,4 +1,4 @@
-import User from "@/models/user";
+import user from "@/models/user";
 import { Inngest } from "inngest";
 import connectDB from "./db";
 
@@ -23,7 +23,7 @@ export const syncUserCreation = inngest.createFunction(
       imageUrl: image_url,
     };
     await connectDB();
-    await User.create(userData);
+    await user.create(userData);
   }
 );
 
@@ -46,7 +46,7 @@ export const syncUserUpdation = inngest.createFunction(
       imageUrl: image_url,
     };
     await connectDB();
-    await User.findByIdAndUpdate(id, userData);
+    await user.findByIdAndUpdate(id, userData);
   }
 );
 
@@ -57,6 +57,6 @@ export const syncUserDeletion = inngest.createFunction(
   async ({ event }) => {
     const { id } = event.data;
     await connectDB();
-    await User.findByIdAndDelete(id);
+    await user.findByIdAndDelete(id);
   }
 );

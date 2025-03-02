@@ -1,5 +1,5 @@
-const { default: mongoose } = require("mongoose");
-
+import "dotenv/config";
+import mongoose from "mongoose";
 let cached = global.mongoose;
 
 if (!cached) {
