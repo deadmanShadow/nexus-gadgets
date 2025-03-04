@@ -1,23 +1,24 @@
 import connectDB from "@/config/db";
-import user from "@/models/user";
+import authSeller from "@/lib/authSeller";
+import Product from "@/models/Product";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export async function GET(request) {
+export async function GET(params) {
   try {
     const { userId } = getAuth(request);
-    await connectDB();
-    const foundUser = await user.findById(userId);
+    const isSeller = authSeller(userId);
 
-    if (!foundUser) {
+    if (!isSeller) {
       return NextResponse.json({
         success: false,
-        message: "User not found",
+        message: "You are not authorized to view this page",
       });
     }
-    return NextResponse.json({ success: true, data: foundUser });
+    await connectDB();
+    const products = await Product.find({});
+    return NextResponse.json({ success: true, products });
   } catch (error) {
-    console.error("Error fetching user:", error);
     return NextResponse.json({
       success: false,
       message: error.message,

@@ -1,8 +1,6 @@
 # Nexus Gadgets - Full Stack eCommerce Solutions🚀
 
-Welcome to **Nexus Gadgets** – an advanced **Full Stack E-commerce** platform built with **Next.js**. This project features seamless authentication, efficient background job management, and a powerful admin dashboard.
-
-## ✨ Features
+Welcome to **Nexus Gadgets** – an advanced **Full Stack E-commerce** platform built with **Next.js**.
 
 ### 🛍️ User Features:
 

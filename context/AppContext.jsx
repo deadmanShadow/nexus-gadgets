@@ -1,8 +1,10 @@
 "use client";
-import { productsDummyData, userDummyData } from "@/assets/assets";
+import { productsDummyData } from "@/assets/assets";
 import { useAuth, useUser } from "@clerk/nextjs";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export const AppContext = createContext();
 
@@ -26,18 +28,39 @@ export const AppContextProvider = (props) => {
 
   const fetchUserData = async () => {
     try {
-      if (user.publicMetadata.role === "admin") {
+      if (user.publicMetadata.role === "seller") {
         setIsSeller(true);
       }
-      setUserData(userDummyData);
-    } catch (error) {}
+      const token = await getToken();
+      const { data } = await axios.get("/api/user/data", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data.success) {
+        setUserData(data.user);
+        setCartItems(data.user.cartItems);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      /// i remove the error
+    }
   };
 
-  const addToCart = (itemId) => {
-    setCartItems((prevCart) => ({
-      ...prevCart,
-      [itemId]: (prevCart[itemId] || 0) + 1,
-    }));
+  const addToCart = async (itemId) => {
+    let cartData = structuredClone(cartItems);
+    if (cartData[itemId]) {
+      cartData[itemId] += 1;
+    } else {
+      cartData[itemId] = 1;
+    }
+    setCartItems(cartData);
+    toast.success("Item added to cart");
+    // setCartItems((prevCart) => ({
+    //   ...prevCart,
+    //   [itemId]: (prevCart[itemId] || 0) + 1,
+    // }));
   };
 
   const updateCartQuantity = (itemId, quantity) => {
