@@ -2,6 +2,7 @@ import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const OrderSummary = () => {
   const { currency, router, getCartCount, getCartAmount } = useAppContext();
@@ -20,6 +21,15 @@ const OrderSummary = () => {
 
   const createOrder = async () => {
     // Order creation logic
+    toast.success("Order placed successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
   };
 
   return (
